@@ -12,7 +12,7 @@
 require 'spec_helper'
 
 describe User do
-    before { @user = User.new(name: "Test User", email: "test@test.com", password: "foobar", password_confirmation: "foobar") }
+    before { @user = User.new(name: "Test User", email: "test@test.com", password: "foobar", password_confirmation: "foobar", remember_token: "toeken")}
     subject { @user }
     it { should respond_to(:name)}
     it { should respond_to(:email)}
@@ -20,6 +20,7 @@ describe User do
     it { should respond_to(:password) }
     it { should respond_to(:password_confirmation) }
     it { should respond_to(:authenticate) }
+    it { should respond_to(:remember_token) }
     it { should be_valid }
     describe "when name is not present" do
     	 before { @user.name = " " }
@@ -79,11 +80,16 @@ describe User do
     end
   end
   describe "email address with mixed case" do
-let(:mixed_case_email) { "Foo@ExAMPle.CoM" }
-it "should be saved as all lower-case" do
-@user.email = mixed_case_email
-@user.save
-@user.reload.email.should == mixed_case_email.downcase
-end
-end
+    let(:mixed_case_email) { "Foo@ExAMPle.CoM" }
+    it "should be saved as all lower-case" do
+      @user.email = mixed_case_email
+      @user.save
+      @user.reload.email.should == mixed_case_email.downcase
+    end
+  end
+  describe "remember token" do
+    before { @user.save }
+    its(:remember_token) { should_not be_blank }
+  end
+
 end
